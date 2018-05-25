@@ -40,13 +40,13 @@ public class DrawFrame extends JFrame implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource()==start){
-			selection.setSelection(1);
+			selection.setSelection(START);
 		}
 		if(e.getSource()==setting){
-			selection.setSelection(2);
+			selection.setSelection(SETTING);
 		}
 		if(e.getSource() == leaderboard) {
-			selection.setSelection(3);
+			selection.setSelection(LEADERBOARD);
 		}
 	}
 

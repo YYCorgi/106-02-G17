@@ -8,21 +8,25 @@ public class Selection {
 	final int SETTING = 2;
 	final int LEADERBOARD = 3;
 	
+	Gaming game;
+	Setting set;
+	Leader leader;
+	
 	public void setSelection(int select) {
 		switch(select) {
-		case 1:
+		case START:
 			System.out.println("Start the game");
-			//gaming(); 開始遊戲
+			game.start();
 			break;
 			
-		case 2:
+		case SETTING:
 			System.out.println("Setting");
-			//setting(); 進入設定
+			set.setter();
 			break;
 			
-		case 3:
+		case LEADERBOARD:
 			System.out.println("Leaderboard");
-			//leaderboard(); 進入排行榜
+			leader.leader();
 			break;
 		}
 	}
