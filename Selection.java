@@ -8,9 +8,9 @@ public class Selection {
 	final int SETTING = 2;
 	final int LEADERBOARD = 3;
 	
-	Gaming game;
-	Setting set;
-	Leader leader;
+	private Gaming game = new Gaming();
+	private Setting set = new Setting();
+	private Leader leader = new Leader();
 	
 	public void setSelection(int select) {
 		switch(select) {
