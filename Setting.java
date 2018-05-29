@@ -1,10 +1,16 @@
 package tetris;
 
-public class Setting {
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
+public class Setting{
+	
 	public void setter() {
-		// TODO Auto-generated method stub
-		
+		SetFrame set = new SetFrame();
+		set.setTitle("Setting");
+		set.setSize(300, 500);
+		set.setVisible(true);
 	}
 
 }
