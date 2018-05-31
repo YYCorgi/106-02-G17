@@ -3,13 +3,13 @@ import java.awt.*;
 import java.awt.Color;
 import java.awt.Graphics;
 
-public class GamingFrame extends Gaming {
+public class GamingFrame extends JFrame {
 	private int i,j;
 	private Color[][] well;
 	
 	public GamingFrame() {
 		super();
-		//init();
+		init();
 	}
 	public void init() {
 		  well = new Color[10][20];
