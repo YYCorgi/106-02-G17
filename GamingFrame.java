@@ -1,11 +1,13 @@
 package tetris;
 import java.awt.*;
-import java.awt.Color;
-import java.awt.Graphics;
 
-public class GamingFrame extends JFrame {
+import javax.swing.JFrame;
+
+public class GamingFrame extends JFrame{
 	private int i,j;
 	private Color[][] well;
+	private Gaming game = new Gaming();
+
 	
 	public GamingFrame() {
 		super();
@@ -22,6 +24,9 @@ public class GamingFrame extends JFrame {
 		    }
 		   }
 		  }
-		  //newPiece();
+		  newPiece();
 		 }
-}
+	public void newPiece() {
+
+	}
+	}
