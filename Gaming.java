@@ -2,12 +2,15 @@ package tetris;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
+import java.util.*;
+import java.util.Timer;
 
 import javax.swing.*;
 
-public class Gaming implements KeyListener{
 
+public class Gaming extends JPanel{
+
+	Timer timer = new Timer();
 	final int MAXX = 20;
 	final int MAXY = 10;
 	int x = 0,y;
@@ -23,7 +26,7 @@ public class Gaming implements KeyListener{
 	private int currentPiece;
 	private int rotation;
 	private ArrayList<Integer> nextPieces = new ArrayList<Integer>();
-	private long score;
+	public long score;
 	private Color[][] well;
 
 	
@@ -85,47 +88,158 @@ public class Gaming implements KeyListener{
 			}
 	};
 	
-	public void setColor(int i) {
-		switch(i) {
-		case 1:
-			break;
-			
-		case 2:
-			Color[] tetraminoColors = {};
-			break;
-		}
-	}
-	
-
-	public void setMode(int i) {
-		// TODO Auto-generated method stub
-		
-	}
-
 	public void start() {
 		System.out.println("Game Time");
-		JFrame frame = new JFrame("Game Time");
-		frame.setSize(200, 400);
-		frame.setVisible(true);
-		frame.addKeyListener(this);
+		JFrame f = new JFrame();
+		f.setSize(500,1000);
+		f.setVisible(true);
+
+		Gaming g = new Gaming();
+		g.init();
+		f.add(g);
+
+		f.addKeyListener(new KeyListener() {
+			public void keyTyped(KeyEvent e) {
+			}
+			
+			public void keyPressed(KeyEvent e) {
+				switch (e.getKeyCode()) {
+				case KeyEvent.VK_UP:
+					g.rotate(-1);
+					break;
+				case KeyEvent.VK_DOWN:
+					//g.rotate(+1);
+					break;
+				case KeyEvent.VK_LEFT:
+					g.move(-1);
+					break;
+				case KeyEvent.VK_RIGHT:
+					g.move(+1);
+					break;
+				case KeyEvent.VK_SPACE:
+					g.dropDown();
+					//g.score += 1;
+					break;
+				} 
+			}
+			
+			public void keyReleased(KeyEvent e) {
+			}
+		});
+		
+		new Thread() {
+			@Override public void run() {
+				while (true) {
+					try {
+						Thread.sleep(1000);
+						g.dropDown();
+					} catch ( InterruptedException e ) {}
+				}
+			}
+		}.start();
+	}
+	
+	public void init() {
+		System.out.println("00");
+		well = new Color[12][24];
+		for (int i = 0; i < 12; i++) {
+			for (int j = 0; j < 23; j++) {
+				if (i == 0 || i == 11 || j == 22) {
+					well[i][j] = Color.GRAY;
+				} else {
+					well[i][j] = Color.BLACK;
+				}
+			}
+		}
+		newPiece();
+	}
+	
+	private boolean collidesAt(int x, int y, int rotation) {
+		for (Point p : Tetraminos[currentPiece][rotation]) {
+			if (well[p.x + x][p.y + y] != Color.BLACK) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void rotate(int i) {
+		int newRotation = (rotation + i) % 4;
+		if (newRotation < 0) {
+			newRotation = 3;
+		}
+		if (!collidesAt(pieceOrigin.x, pieceOrigin.y, newRotation)) {
+			rotation = newRotation;
+		}
+		repaint();
+	}
+
+	public void move(int i) {
+		if (!collidesAt(pieceOrigin.x + i, pieceOrigin.y, rotation)) {
+			pieceOrigin.x += i;	
+		}
+		repaint();
+	}
+	
+	public void dropDown() {
+		if (!collidesAt(pieceOrigin.x, pieceOrigin.y + 1, rotation)) {
+			pieceOrigin.y += 1;
+		} else {
+			fixToWell();
+		}	
+		repaint();
+	}
+	
+	public void fixToWell() {
+		for (Point p : Tetraminos[currentPiece][rotation]) {
+			well[pieceOrigin.x + p.x][pieceOrigin.y + p.y] = tetraminoColors[currentPiece];
+		}
+		death();
+		clearRows();
+		newPiece();
 	}
 	
 	public void deleteRow(int row) {
 		for (int j = row-1; j > 0; j--) {
 			for (int i = 1; i < 11; i++) {
-				//well[i][j+1] = well[i][j];
+				well[i][j+1] = well[i][j];
 			}
 		}
 	}
 	
+	public void GG(int n) {
+		switch(n) {
+		case 1:
+			dead.newframe(score);
+			break;
+			
+		case 2:
+			
+			break;
+		}
+	}
+	
+	public void death() {
+		System.out.println("death");
+		for (int i = 1; i < 11; i++) {
+			if (well[i][0] != Color.BLACK) {
+				gap = true;
+				System.out.println("GG");
+				GG(1);
+				break;
+			}
+		}	
+	}
+	
 	public void clearRows() {	
+		System.out.println("clear");
 		for (int j = 21; j > 0; j--) {
 			gap = false;
 			for (int i = 1; i < 11; i++) {
-				//if (well[i][j] == Color.BLACK) {
-					//gap = true;
-				//	break;
-				//}
+				if (well[i][j] == Color.BLACK) {
+					gap = true;
+					break;
+				}
 			}
 			if (!gap) {
 				deleteRow(j);
@@ -139,69 +253,67 @@ public class Gaming implements KeyListener{
 			score += 100;
 			break;
 		case 2:
-			score += 300;
+			score += 200;
 			break;
 		case 3:
-			score += 500;
+			score += 400;
 			break;
 		case 4:
-			score += 800;
+			score += 700;
 			break;
 		}
 	}
 	
-	@Override
-	public void keyPressed(KeyEvent e) {
-        switch(e.getKeyCode())  {  
-            case KeyEvent.VK_UP: 
-            	System.out.println("Shape turn");
-            	break;  
-            case KeyEvent.VK_DOWN:   
-            	System.out.println("Shape go down");
-            	x++;
-            	if(x >= MAXX) {
-            		System.out.println("Hit Max X");
-            	}
-                break;  
-            case KeyEvent.VK_LEFT:  
-            	System.out.println("Shape go left");
-            	y++;
-            	if(y >= MAXY) {
-            		y = MAXY;
-            		System.out.println("Hit Max Y");
-            	}
-                break;  
-            case KeyEvent.VK_RIGHT:  
-            	System.out.println("Shape go right");
-            	y--;
-            	if(y <= 0) {
-            		y = 0;
-            		System.out.println("Hit min y");
-            	}
-                break;  
-            case KeyEvent.VK_SHIFT:
-            	System.out.println("Shape hold");
-            	hold = 1;
-            	break;
-            case KeyEvent.VK_SPACE:
-            	do {
-                	System.out.println("Shape Fall");
-                	x++;
-            	}while(x <= MAXX);
-            	System.out.println("Hit Max X");
-            	break;
-        }  
+	private void drawPiece(Graphics g) {
+		g.setColor(tetraminoColors[currentPiece]);
+		for (Point p : Tetraminos[currentPiece][rotation]) {
+			g.fillRect((p.x + pieceOrigin.x) * 26, 
+					   (p.y + pieceOrigin.y) * 26, 
+					   25, 25);
+		}
+	}
+	
+	public void paintComponent(Graphics g)
+	{
+		// Paint the well
+		g.fillRect(0, 0, 26*12, 26*23);
+		for (int i = 0; i < 12; i++) {
+			for (int j = 0; j < 23; j++) {
+				g.setColor(well[i][j]);
+				g.fillRect(26*i, 26*j, 25, 25);
+			}
+		}
+		
+		// Display the score
+		g.setColor(Color.WHITE);
+		g.drawString("" + score, 19*12, 25);
+		g.drawString("", MAXX, MAXY);
+		
+		// Draw the currently falling piece
+		drawPiece(g);
 	}
 
-	@Override
-	public void keyReleased(KeyEvent e) {
+	public void newPiece() {
+		pieceOrigin = new Point(5, 2);
+		rotation = 0;
+		if (nextPieces.isEmpty()) {
+			Collections.addAll(nextPieces, 0, 1, 2, 3, 4, 5, 6);
+			Collections.shuffle(nextPieces);
+		}
+		currentPiece = nextPieces.get(0);
+		nextPieces.remove(0);
+	}
+	
+	public void setColor(int i) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
-	public void keyTyped(KeyEvent e) {
+	public void setMode(int i) {
 		// TODO Auto-generated method stub
 		
 	}
+
+	
+	
 }

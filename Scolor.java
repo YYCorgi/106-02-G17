@@ -1,5 +1,7 @@
 package tetris;
 
+import javax.swing.JFrame;
+
 public class Scolor {
 
 	public void set() {
