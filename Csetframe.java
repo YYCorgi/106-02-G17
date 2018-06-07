@@ -49,7 +49,8 @@ public class Csetframe extends JFrame implements ActionListener{
 		if(e.getSource() == Classic) {
 			System.out.println("Classic");
 			game.setColor(1);
-		}else {
+		}
+		if(e.getSource() == Custom){
 			System.out.println("Black n'White");
 			game.setColor(2);
 		}

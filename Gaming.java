@@ -11,23 +11,26 @@ import javax.swing.*;
 public class Gaming extends JPanel{
 
 	Timer timer = new Timer();
+	final int MAX = 20;
 	final int MAXX = 20;
 	final int MAXY = 10;
+	String time = "120";
 	int x = 0,y;
 	int hold = 0;
 	boolean gap;
 	int numClears = 0;
-	int check = 1;
 	
-	private Color[] tetraminoColors = {Color.cyan, Color.blue, Color.orange, Color.yellow, Color.green, Color.pink, Color.red};
-	
+	private Color[] OtetraminoColors = {Color.cyan, Color.blue, Color.orange, Color.yellow, Color.green, Color.pink, Color.red};
+	private Color[] CtetraminoColors = {Color.white,Color.white,Color.white,Color.white,Color.white,Color.white};
+
+	private int color = 1;
 	
 	private Point pieceOrigin;
 	private int currentPiece;
 	private int rotation;
 	private ArrayList<Integer> nextPieces = new ArrayList<Integer>();
 	public long score;
-	private Color[][] well;
+	private Color[][] wall;
 
 	
 	private final Point[][][] Tetraminos = {
@@ -87,10 +90,24 @@ public class Gaming extends JPanel{
 				{ new Point(1, 0), new Point(0, 1), new Point(1, 1), new Point(0, 2) }
 			}
 	};
+
+	public void setColor(int i) {
+		switch(i) {
+		case 1:
+			color = 1;
+			break;
+			
+		case 2:
+			color = 2;
+			break;
+		}
+		
+	}
 	
 	public void start() {
 		System.out.println("Game Time");
 		JFrame f = new JFrame();
+		f.setTitle("Game Time");
 		f.setSize(500,1000);
 		f.setVisible(true);
 
@@ -108,7 +125,7 @@ public class Gaming extends JPanel{
 					g.rotate(-1);
 					break;
 				case KeyEvent.VK_DOWN:
-					//g.rotate(+1);
+					g.dropDown();
 					break;
 				case KeyEvent.VK_LEFT:
 					g.move(-1);
@@ -130,6 +147,22 @@ public class Gaming extends JPanel{
 		new Thread() {
 			@Override public void run() {
 				while (true) {
+					try {  
+					    Thread.sleep(1000);
+					    if (time == "0") {
+					    	System.out.println("BANG");
+					    	g.GG(1);
+					    }
+					}catch(Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}.start();
+		
+		new Thread() {
+			@Override public void run() {
+				while (true) {
 					try {
 						Thread.sleep(1000);
 						g.dropDown();
@@ -138,16 +171,16 @@ public class Gaming extends JPanel{
 			}
 		}.start();
 	}
-	
+
 	public void init() {
-		System.out.println("00");
-		well = new Color[12][24];
+		System.out.println("88");
+		wall = new Color[12][24];
 		for (int i = 0; i < 12; i++) {
 			for (int j = 0; j < 23; j++) {
 				if (i == 0 || i == 11 || j == 22) {
-					well[i][j] = Color.GRAY;
+					wall[i][j] = Color.GRAY;
 				} else {
-					well[i][j] = Color.BLACK;
+					wall[i][j] = Color.BLACK;
 				}
 			}
 		}
@@ -156,7 +189,7 @@ public class Gaming extends JPanel{
 	
 	private boolean collidesAt(int x, int y, int rotation) {
 		for (Point p : Tetraminos[currentPiece][rotation]) {
-			if (well[p.x + x][p.y + y] != Color.BLACK) {
+			if (wall[p.x + x][p.y + y] != Color.BLACK) {
 				return true;
 			}
 		}
@@ -191,18 +224,31 @@ public class Gaming extends JPanel{
 	}
 	
 	public void fixToWell() {
-		for (Point p : Tetraminos[currentPiece][rotation]) {
-			well[pieceOrigin.x + p.x][pieceOrigin.y + p.y] = tetraminoColors[currentPiece];
+		switch(color) {
+		case 1:
+			for (Point p : Tetraminos[currentPiece][rotation]) {
+				wall[pieceOrigin.x + p.x][pieceOrigin.y + p.y] = OtetraminoColors[currentPiece];
+			}
+			death();
+			clearRows();
+			newPiece();	
+			break;
+			
+		case 2:
+			for (Point p : Tetraminos[currentPiece][rotation]) {
+				wall[pieceOrigin.x + p.x][pieceOrigin.y + p.y] = CtetraminoColors[currentPiece];
+			}
+			death();
+			clearRows();
+			newPiece();
+			break;
 		}
-		death();
-		clearRows();
-		newPiece();
 	}
 	
 	public void deleteRow(int row) {
 		for (int j = row-1; j > 0; j--) {
 			for (int i = 1; i < 11; i++) {
-				well[i][j+1] = well[i][j];
+				wall[i][j+1] = wall[i][j];
 			}
 		}
 	}
@@ -220,11 +266,11 @@ public class Gaming extends JPanel{
 	}
 	
 	public void death() {
-		System.out.println("death");
 		for (int i = 1; i < 11; i++) {
-			if (well[i][0] != Color.BLACK) {
-				gap = true;
+			if (wall[i][0] != Color.BLACK) {
+				gap = false;
 				System.out.println("GG");
+				System.out.println("death");
 				GG(1);
 				break;
 			}
@@ -232,17 +278,17 @@ public class Gaming extends JPanel{
 	}
 	
 	public void clearRows() {	
-		System.out.println("clear");
 		for (int j = 21; j > 0; j--) {
 			gap = false;
 			for (int i = 1; i < 11; i++) {
-				if (well[i][j] == Color.BLACK) {
+				if (wall[i][j] == Color.BLACK) {
 					gap = true;
 					break;
 				}
 			}
 			if (!gap) {
 				deleteRow(j);
+				System.out.println("clear");
 				j += 1;
 				numClears += 1;
 			}
@@ -265,31 +311,40 @@ public class Gaming extends JPanel{
 	}
 	
 	private void drawPiece(Graphics g) {
-		g.setColor(tetraminoColors[currentPiece]);
-		for (Point p : Tetraminos[currentPiece][rotation]) {
-			g.fillRect((p.x + pieceOrigin.x) * 26, 
-					   (p.y + pieceOrigin.y) * 26, 
-					   25, 25);
+		switch(color) {
+		case 1:
+			g.setColor(OtetraminoColors[currentPiece]);
+			for (Point p : Tetraminos[currentPiece][rotation]) {
+				g.fillRect((p.x + pieceOrigin.x) * 40, (p.y + pieceOrigin.y) * 40, 39, 39);
+			}	
+			break;
+			
+		case 2:
+			g.setColor(CtetraminoColors[currentPiece]);
+			for (Point p : Tetraminos[currentPiece][rotation]) {
+				g.fillRect((p.x + pieceOrigin.x) * 40, (p.y + pieceOrigin.y) * 40, 39, 39);
+			}
+			break;
 		}
 	}
 	
 	public void paintComponent(Graphics g)
 	{
-		// Paint the well
-		g.fillRect(0, 0, 26*12, 26*23);
+		g.fillRect(0, 0, 40*12, 40*24);
 		for (int i = 0; i < 12; i++) {
 			for (int j = 0; j < 23; j++) {
-				g.setColor(well[i][j]);
-				g.fillRect(26*i, 26*j, 25, 25);
+				g.setColor(wall[i][j]);
+				g.fillRect(40*i, 40*j, 39, 39);
 			}
 		}
 		
-		// Display the score
 		g.setColor(Color.WHITE);
-		g.drawString("" + score, 19*12, 25);
-		g.drawString("", MAXX, MAXY);
+		g.drawString("" + score, 35*12, 25);
 		
-		// Draw the currently falling piece
+		while(time != "0") {
+			g.setColor(Color.WHITE);
+			g.drawString("" + time, 20, 20);
+		}
 		drawPiece(g);
 	}
 
@@ -302,11 +357,6 @@ public class Gaming extends JPanel{
 		}
 		currentPiece = nextPieces.get(0);
 		nextPieces.remove(0);
-	}
-	
-	public void setColor(int i) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	public void setMode(int i) {

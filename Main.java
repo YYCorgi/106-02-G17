@@ -7,6 +7,7 @@ public class Main {
 		game.setTitle("Tetris");
 		game.setSize(300, 500);
 		game.setVisible(true);
+		game.setDefaultCloseOperation(game.EXIT_ON_CLOSE);
 	}
 
 }
