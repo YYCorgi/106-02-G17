@@ -3,26 +3,20 @@ package tetris;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
-import java.util.Timer;
 
 import javax.swing.*;
 
 
 public class Gaming extends JPanel{
 
-	Timer timer = new Timer();
-	final int MAX = 20;
-	final int MAXX = 20;
-	final int MAXY = 10;
-	String time = "120";
-	int x = 0,y;
-	int hold = 0;
+	public long time = 120;
 	boolean gap;
+	boolean los = false;
 	int numClears = 0;
 	
 	private Color[] OtetraminoColors = {Color.cyan, Color.blue, Color.orange, Color.yellow, Color.green, Color.pink, Color.red};
 	private Color[] CtetraminoColors = {Color.white,Color.white,Color.white,Color.white,Color.white,Color.white};
-
+	
 	private int color = 1;
 	
 	private Point pieceOrigin;
@@ -90,26 +84,14 @@ public class Gaming extends JPanel{
 				{ new Point(1, 0), new Point(0, 1), new Point(1, 1), new Point(0, 2) }
 			}
 	};
-
-	public void setColor(int i) {
-		switch(i) {
-		case 1:
-			color = 1;
-			break;
-			
-		case 2:
-			color = 2;
-			break;
-		}
-		
-	}
 	
 	public void start() {
 		System.out.println("Game Time");
 		JFrame f = new JFrame();
 		f.setTitle("Game Time");
-		f.setSize(500,1000);
+		f.setSize(495,958);
 		f.setVisible(true);
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		Gaming g = new Gaming();
 		g.init();
@@ -126,6 +108,7 @@ public class Gaming extends JPanel{
 					break;
 				case KeyEvent.VK_DOWN:
 					g.dropDown();
+					g.score += 1;
 					break;
 				case KeyEvent.VK_LEFT:
 					g.move(-1);
@@ -133,28 +116,27 @@ public class Gaming extends JPanel{
 				case KeyEvent.VK_RIGHT:
 					g.move(+1);
 					break;
-				case KeyEvent.VK_SPACE:
-					g.dropDown();
-					//g.score += 1;
-					break;
 				} 
 			}
 			
 			public void keyReleased(KeyEvent e) {
 			}
 		});
-		
 		new Thread() {
 			@Override public void run() {
-				while (true) {
-					try {  
-					    Thread.sleep(1000);
-					    if (time == "0") {
-					    	System.out.println("BANG");
-					    	g.GG(1);
-					    }
-					}catch(Exception e) {
-						e.printStackTrace();
+				while (los != true) {
+					try {
+						g.los = false;
+						Thread.sleep(1000);
+						time--;
+						g.time = time;
+						System.out.println(""+time);
+						if(time == 0 || g.los == true) {
+							g.los = true;
+							break;
+						}
+					}catch(InterruptedException e) {
+						
 					}
 				}
 			}
@@ -162,10 +144,15 @@ public class Gaming extends JPanel{
 		
 		new Thread() {
 			@Override public void run() {
-				while (true) {
+				while (los == false) {
 					try {
 						Thread.sleep(1000);
 						g.dropDown();
+						g.death();
+						if(g.los == true) {
+							GG(1);
+							break;
+						}
 					} catch ( InterruptedException e ) {}
 				}
 			}
@@ -173,7 +160,7 @@ public class Gaming extends JPanel{
 	}
 
 	public void init() {
-		System.out.println("88");
+		System.out.println("00");
 		wall = new Color[12][24];
 		for (int i = 0; i < 12; i++) {
 			for (int j = 0; j < 23; j++) {
@@ -256,22 +243,22 @@ public class Gaming extends JPanel{
 	public void GG(int n) {
 		switch(n) {
 		case 1:
-			dead.newframe(score);
+			System.out.println("Out of time");
+			dead.Tnewframe(score);
 			break;
 			
 		case 2:
-			
+			System.out.println("Reach the roof top");
+			dead.Rnewframe(score);
 			break;
 		}
 	}
 	
 	public void death() {
 		for (int i = 1; i < 11; i++) {
-			if (wall[i][0] != Color.BLACK) {
-				gap = false;
-				System.out.println("GG");
-				System.out.println("death");
-				GG(1);
+			if (wall[i][2] != Color.BLACK) {
+				los = true;
+				GG(2);
 				break;
 			}
 		}	
@@ -288,9 +275,9 @@ public class Gaming extends JPanel{
 			}
 			if (!gap) {
 				deleteRow(j);
-				System.out.println("clear");
 				j += 1;
 				numClears += 1;
+				System.out.println("clear");
 			}
 		}
 		
@@ -308,6 +295,7 @@ public class Gaming extends JPanel{
 			score += 700;
 			break;
 		}
+		numClears = 0;
 	}
 	
 	private void drawPiece(Graphics g) {
@@ -328,9 +316,8 @@ public class Gaming extends JPanel{
 		}
 	}
 	
-	public void paintComponent(Graphics g)
-	{
-		g.fillRect(0, 0, 40*12, 40*24);
+	public void paintComponent(Graphics g){	
+		g.fillRect(0, 0, 40*12, 40*23);
 		for (int i = 0; i < 12; i++) {
 			for (int j = 0; j < 23; j++) {
 				g.setColor(wall[i][j]);
@@ -339,12 +326,11 @@ public class Gaming extends JPanel{
 		}
 		
 		g.setColor(Color.WHITE);
-		g.drawString("" + score, 35*12, 25);
+		g.drawString("" + score, 40*10, 40);
+		g.drawString("" + time, 230, 25);
 		
-		while(time != "0") {
-			g.setColor(Color.WHITE);
-			g.drawString("" + time, 20, 20);
-		}
+		repaint();
+		
 		drawPiece(g);
 	}
 
@@ -358,12 +344,22 @@ public class Gaming extends JPanel{
 		currentPiece = nextPieces.get(0);
 		nextPieces.remove(0);
 	}
+	
+	public void setColor(int i) {
+		switch(i) {
+		case 1:
+			color = 1;
+			break;
+			
+		case 2:
+			color = 2;
+			break;
+		}
+		
+	}
 
 	public void setMode(int i) {
 		// TODO Auto-generated method stub
 		
 	}
-
-	
-	
 }
