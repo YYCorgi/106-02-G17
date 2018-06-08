@@ -9,10 +9,12 @@ import javax.swing.*;
 
 public class Gaming extends JPanel{
 
-	public long time = 120;
+	public long time = 10;
 	boolean gap;
 	boolean los = false;
 	int numClears = 0;
+	
+	Dead d = new Dead();
 	
 	private Color[] OtetraminoColors = {Color.cyan, Color.blue, Color.orange, Color.yellow, Color.green, Color.pink, Color.red};
 	private Color[] CtetraminoColors = {Color.white,Color.white,Color.white,Color.white,Color.white,Color.white};
@@ -23,9 +25,9 @@ public class Gaming extends JPanel{
 	private int currentPiece;
 	private int rotation;
 	private ArrayList<Integer> nextPieces = new ArrayList<Integer>();
-	public long score;
+	public long score = 0;
+	public long cscore;
 	private Color[][] wall;
-
 	
 	private final Point[][][] Tetraminos = {
 			// I
@@ -109,6 +111,7 @@ public class Gaming extends JPanel{
 				case KeyEvent.VK_DOWN:
 					g.dropDown();
 					g.score += 1;
+					cscore = g.score;
 					break;
 				case KeyEvent.VK_LEFT:
 					g.move(-1);
@@ -128,8 +131,8 @@ public class Gaming extends JPanel{
 					try {
 						g.los = false;
 						Thread.sleep(1000);
-						time--;
-						g.time = time;
+						g.time--;
+						time = g.time;
 						System.out.println(""+time);
 						if(time == 0 || g.los == true) {
 							g.los = true;
@@ -146,9 +149,9 @@ public class Gaming extends JPanel{
 			@Override public void run() {
 				while (los == false) {
 					try {
+						g.death();
 						Thread.sleep(1000);
 						g.dropDown();
-						g.death();
 						if(g.los == true) {
 							GG(1);
 							break;
@@ -244,12 +247,14 @@ public class Gaming extends JPanel{
 		switch(n) {
 		case 1:
 			System.out.println("Out of time");
-			dead.Tnewframe(score);
+			Dead.Tnewframe();
+			Dead.result(score, time);
 			break;
 			
 		case 2:
 			System.out.println("Reach the roof top");
-			dead.Rnewframe(score);
+			Dead.Rnewframe();
+			Dead.result(score, time);
 			break;
 		}
 	}
@@ -284,15 +289,19 @@ public class Gaming extends JPanel{
 		switch (numClears) {
 		case 1:
 			score += 100;
+			cscore = score;
 			break;
 		case 2:
 			score += 200;
+			cscore = score;
 			break;
 		case 3:
 			score += 400;
+			cscore = score;
 			break;
 		case 4:
 			score += 700;
+			cscore = score;
 			break;
 		}
 		numClears = 0;
@@ -355,11 +364,6 @@ public class Gaming extends JPanel{
 			color = 2;
 			break;
 		}
-		
-	}
-
-	public void setMode(int i) {
-		// TODO Auto-generated method stub
 		
 	}
 }

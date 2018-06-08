@@ -7,7 +7,7 @@ import javax.swing.*;
 public class Setting{
 	
 	public void setter() {
-		SetFrame set = new SetFrame();
+		Csetframe set = new Csetframe();
 		set.setTitle("Setting");
 		set.setSize(300, 500);
 		set.setVisible(true);
