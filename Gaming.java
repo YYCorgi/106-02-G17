@@ -9,12 +9,13 @@ import javax.swing.*;
 
 public class Gaming extends JPanel{
 
+	
 	public long time = 10;
 	boolean gap;
 	boolean los = false;
 	int numClears = 0;
 	
-	Dead d = new Dead();
+	public Dead d = new Dead();
 	
 	private Color[] OtetraminoColors = {Color.cyan, Color.blue, Color.orange, Color.yellow, Color.green, Color.pink, Color.red};
 	private Color[] CtetraminoColors = {Color.white,Color.white,Color.white,Color.white,Color.white,Color.white};
@@ -94,6 +95,7 @@ public class Gaming extends JPanel{
 		f.setSize(495,958);
 		f.setVisible(true);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.setResizable(false);
 
 		Gaming g = new Gaming();
 		g.init();
@@ -163,7 +165,6 @@ public class Gaming extends JPanel{
 	}
 
 	public void init() {
-		System.out.println("00");
 		wall = new Color[12][24];
 		for (int i = 0; i < 12; i++) {
 			for (int j = 0; j < 23; j++) {
@@ -244,17 +245,16 @@ public class Gaming extends JPanel{
 	}
 	
 	public void GG(int n) {
+		Name name = new Name();
 		switch(n) {
 		case 1:
 			System.out.println("Out of time");
-			Dead.Tnewframe();
-			Dead.result(score, time);
+			name.enter();
 			break;
 			
 		case 2:
 			System.out.println("Reach the roof top");
-			Dead.Rnewframe();
-			Dead.result(score, time);
+			name.enter();
 			break;
 		}
 	}

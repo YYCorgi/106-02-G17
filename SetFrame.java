@@ -16,7 +16,6 @@ public class SetFrame extends JFrame implements ActionListener{
 	public Setsel setsel = new Setsel();
 	
 	public Csetframe csetframe;
-	public Gmodeframe gmodeframe;
 	
 	private JPanel Setter;
 	private JButton cset;
