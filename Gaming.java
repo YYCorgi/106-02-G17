@@ -10,12 +10,11 @@ import javax.swing.*;
 public class Gaming extends JPanel{
 
 	
-	public long time = 10;
+	public long time = 120;
 	boolean gap;
 	boolean los = false;
 	int numClears = 0;
-	
-	public Dead d = new Dead();
+
 	
 	private Color[] OtetraminoColors = {Color.cyan, Color.blue, Color.orange, Color.yellow, Color.green, Color.pink, Color.red};
 	private Color[] CtetraminoColors = {Color.white,Color.white,Color.white,Color.white,Color.white,Color.white};
@@ -27,7 +26,8 @@ public class Gaming extends JPanel{
 	private int rotation;
 	private ArrayList<Integer> nextPieces = new ArrayList<Integer>();
 	public long score = 0;
-	public long cscore;
+	private long cs;
+	public long fscore;
 	private Color[][] wall;
 	
 	private final Point[][][] Tetraminos = {
@@ -98,6 +98,7 @@ public class Gaming extends JPanel{
 		f.setResizable(false);
 
 		Gaming g = new Gaming();
+		
 		g.init();
 		f.add(g);
 
@@ -113,7 +114,8 @@ public class Gaming extends JPanel{
 				case KeyEvent.VK_DOWN:
 					g.dropDown();
 					g.score += 1;
-					cscore = g.score;
+					cs = g.score;
+					System.out.println(g.score);
 					break;
 				case KeyEvent.VK_LEFT:
 					g.move(-1);
@@ -248,12 +250,18 @@ public class Gaming extends JPanel{
 		Name name = new Name();
 		switch(n) {
 		case 1:
+			fscore = cs;
 			System.out.println("Out of time");
+			System.out.println("" + fscore);
+			name = new Name(fscore);
 			name.enter();
 			break;
 			
 		case 2:
+			fscore = cs;
 			System.out.println("Reach the roof top");
+			System.out.println("" + fscore);
+			name = new Name(fscore);
 			name.enter();
 			break;
 		}
@@ -289,19 +297,23 @@ public class Gaming extends JPanel{
 		switch (numClears) {
 		case 1:
 			score += 100;
-			cscore = score;
+			System.out.println(score);
+			cs = score;
 			break;
 		case 2:
 			score += 200;
-			cscore = score;
+			System.out.println(score);
+			cs = score;
 			break;
 		case 3:
 			score += 400;
-			cscore = score;
+			System.out.println(score);
+			cs = score;
 			break;
 		case 4:
 			score += 700;
-			cscore = score;
+			System.out.println(score);
+			cs = score;
 			break;
 		}
 		numClears = 0;
