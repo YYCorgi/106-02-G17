@@ -1,4 +1,4 @@
-package d0602;
+package tetris;
 
 import java.sql.*;
 
