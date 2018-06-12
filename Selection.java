@@ -1,5 +1,5 @@
 package tetris;
-
+import d0602.InsertData;
 public class Selection {
 
 	private int select;
@@ -10,7 +10,8 @@ public class Selection {
 	
 	private Gaming game = new Gaming();
 	private Setting set = new Setting();
-	private Leader leader = new Leader();
+	private InsertData leader = new InsertData();
+	
 	
 	public void setSelection(int select) {
 		switch(select) {
@@ -26,7 +27,7 @@ public class Selection {
 			
 		case LEADERBOARD:
 			System.out.println("Leaderboard");
-			//leader.leader();
+			leader.fxxk();
 			break;
 		}
 	}
