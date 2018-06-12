@@ -7,36 +7,43 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class Dead extends JPanel {
-
-	private long fscore,ftime;
-
-	private String name;
 	
-	public void name(String s) {
-		name = s;
+	public static long ftime;
+	public static long fscore;
+	
+	public static void result(long score,long time) {
+		ftime = time;
+		fscore = score;
 	}
 	
-	public void result(long s, long t) {
-		fscore = s;
-		ftime = t;
-	}
-	
-	private void newframe() {
-		JFrame f = new JFrame("Result");
-		f.setSize(250,250);
-		f.setVisible(true);
+	public static void Tnewframe() {
+		JFrame tdf = new JFrame();
+		tdf.setSize(300, 300);
+		tdf.setTitle("Game over!");
+		tdf.setVisible(true);
 		
-		Dead d = new Dead();
-		f.add(d);
+		Dead td = new Dead();
+		tdf.add(td);
+	}
+
+	public static void Rnewframe() {
+
+		JFrame rdf = new JFrame();
+		rdf.setSize(300,300);
+		rdf.setVisible(true);
+		rdf.setTitle("Game ovar!");
+		
+		Dead rd = new Dead();	
+		rdf.add(rd);
 	}
 	
-	public void paintComponent(Graphics g){	
-		g.fillRect(0, 0, 250, 250);
-		
+	
+	public void paintComponent(Graphics g){
+		g.setColor(Color.gray);
+		g.fillRect(0, 0, 300, 270);
 		g.setColor(Color.WHITE);
-		g.drawString("" + fscore, 20, 40);
-		g.drawString("" + ftime, 20, 80);
-		g.drawString("" + name, 20, 120);
+		g.drawString("Your Score is:" + fscore, 40, 40);
+		g.drawString("Your Time is:" + ftime, 40, 100);
 		
 		repaint();
 	}

@@ -26,7 +26,7 @@ public class Selection {
 			
 		case LEADERBOARD:
 			System.out.println("Leaderboard");
-			leader.leader();
+			//leader.leader();
 			break;
 		}
 	}

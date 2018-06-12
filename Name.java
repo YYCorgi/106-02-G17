@@ -10,8 +10,7 @@ import javax.swing.JTextField;
 
 public class Name extends JFrame implements ActionListener{
 
-	JButton con = new JButton("½T©w");
-	JButton cel = new JButton("²M°£");
+	JButton con = new JButton("Confirm");
 	
 	JTextField ti = new JTextField();
 	JTextField tan = new JTextField();
@@ -48,7 +47,7 @@ public class Name extends JFrame implements ActionListener{
 		
 		con.addActionListener(this); 
 		con.setBounds(75,110,70,20); 
-		add(con); 
+		add(con);
 
 		tas.setText(""+fs);
 		

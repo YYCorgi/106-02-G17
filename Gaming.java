@@ -2,8 +2,12 @@ package tetris;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.net.URL;
 import java.util.*;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 
 
@@ -17,7 +21,7 @@ public class Gaming extends JPanel{
 
 	
 	private Color[] OtetraminoColors = {Color.cyan, Color.blue, Color.orange, Color.yellow, Color.green, Color.pink, Color.red};
-	private Color[] CtetraminoColors = {Color.white,Color.white,Color.white,Color.white,Color.white,Color.white};
+	private Color[] CtetraminoColors = {Color.BLACK,Color.BLACK,Color.BLACK,Color.BLACK,Color.BLACK,Color.BLACK};
 	
 	private int color = 1;
 	
@@ -129,6 +133,19 @@ public class Gaming extends JPanel{
 			public void keyReleased(KeyEvent e) {
 			}
 		});
+		new Thread(new Runnable() {
+			    public void run() {
+			      try {
+			    	  URL url = this.getClass().getClassLoader().getResource("T.mp3");
+			    	  Clip clip = AudioSystem.getClip();
+			    	  AudioInputStream inputStream = AudioSystem.getAudioInputStream(
+			          Main.class.getResourceAsStream("/tetirs/src/" + url));
+			    	  clip.open(inputStream);
+			    	  clip.start(); 
+			      } catch (Exception e) {
+			      }
+			    }
+			  }).start();
 		new Thread() {
 			@Override public void run() {
 				while (los != true) {
@@ -139,7 +156,6 @@ public class Gaming extends JPanel{
 						time = g.time;
 						System.out.println(""+time);
 						if(time == 0 || g.los == true) {
-							g.los = true;
 							break;
 						}
 					}catch(InterruptedException e) {
@@ -170,10 +186,10 @@ public class Gaming extends JPanel{
 		wall = new Color[12][24];
 		for (int i = 0; i < 12; i++) {
 			for (int j = 0; j < 23; j++) {
-				if (i == 0 || i == 11 || j == 22) {
-					wall[i][j] = Color.GRAY;
-				} else {
+				if (i == 0 || i == 11 || j == 0 || j == 22) {
 					wall[i][j] = Color.BLACK;
+				} else {
+					wall[i][j] = Color.WHITE;
 				}
 			}
 		}
@@ -182,7 +198,7 @@ public class Gaming extends JPanel{
 	
 	private boolean collidesAt(int x, int y, int rotation) {
 		for (Point p : Tetraminos[currentPiece][rotation]) {
-			if (wall[p.x + x][p.y + y] != Color.BLACK) {
+			if (wall[p.x + x][p.y + y] != Color.WHITE) {
 				return true;
 			}
 		}
@@ -222,18 +238,18 @@ public class Gaming extends JPanel{
 			for (Point p : Tetraminos[currentPiece][rotation]) {
 				wall[pieceOrigin.x + p.x][pieceOrigin.y + p.y] = OtetraminoColors[currentPiece];
 			}
-			death();
 			clearRows();
 			newPiece();	
+			death();
 			break;
 			
 		case 2:
 			for (Point p : Tetraminos[currentPiece][rotation]) {
 				wall[pieceOrigin.x + p.x][pieceOrigin.y + p.y] = CtetraminoColors[currentPiece];
 			}
-			death();
 			clearRows();
 			newPiece();
+			death();
 			break;
 		}
 	}
@@ -269,7 +285,7 @@ public class Gaming extends JPanel{
 	
 	public void death() {
 		for (int i = 1; i < 11; i++) {
-			if (wall[i][2] != Color.BLACK) {
+			if (wall[i][1] != Color.WHITE) {
 				los = true;
 				GG(2);
 				break;
@@ -281,7 +297,7 @@ public class Gaming extends JPanel{
 		for (int j = 21; j > 0; j--) {
 			gap = false;
 			for (int i = 1; i < 11; i++) {
-				if (wall[i][j] == Color.BLACK) {
+				if (wall[i][j] == Color.WHITE) {
 					gap = true;
 					break;
 				}
@@ -347,7 +363,7 @@ public class Gaming extends JPanel{
 		}
 		
 		g.setColor(Color.WHITE);
-		g.drawString("" + score, 40*10, 40);
+		g.drawString("" + score, 40*10, 25);
 		g.drawString("" + time, 230, 25);
 		
 		repaint();
@@ -356,7 +372,7 @@ public class Gaming extends JPanel{
 	}
 
 	public void newPiece() {
-		pieceOrigin = new Point(5, 2);
+		pieceOrigin = new Point(5, 1);
 		rotation = 0;
 		if (nextPieces.isEmpty()) {
 			Collections.addAll(nextPieces, 0, 1, 2, 3, 4, 5, 6);
