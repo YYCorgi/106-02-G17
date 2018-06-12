@@ -1,7 +1,13 @@
 package tetris;
 
+import java.applet.Applet;
+import java.applet.AudioClip;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
@@ -19,6 +25,8 @@ public class Gaming extends JPanel{
 	boolean los = false;
 	int numClears = 0;
 
+	private Clip c;
+	
 	
 	private Color[] OtetraminoColors = {Color.cyan, Color.blue, Color.orange, Color.yellow, Color.green, Color.pink, Color.red};
 	private Color[] CtetraminoColors = {Color.BLACK,Color.BLACK,Color.BLACK,Color.BLACK,Color.BLACK,Color.BLACK};
@@ -133,19 +141,7 @@ public class Gaming extends JPanel{
 			public void keyReleased(KeyEvent e) {
 			}
 		});
-		new Thread(new Runnable() {
-			    public void run() {
-			      try {
-			    	  URL url = this.getClass().getClassLoader().getResource("T.mp3");
-			    	  Clip clip = AudioSystem.getClip();
-			    	  AudioInputStream inputStream = AudioSystem.getAudioInputStream(
-			          Main.class.getResourceAsStream("/tetirs/src/" + url));
-			    	  clip.open(inputStream);
-			    	  clip.start(); 
-			      } catch (Exception e) {
-			      }
-			    }
-			  }).start();
+	
 		new Thread() {
 			@Override public void run() {
 				while (los != true) {
@@ -238,18 +234,18 @@ public class Gaming extends JPanel{
 			for (Point p : Tetraminos[currentPiece][rotation]) {
 				wall[pieceOrigin.x + p.x][pieceOrigin.y + p.y] = OtetraminoColors[currentPiece];
 			}
-			clearRows();
-			newPiece();	
+			clearRows();	
 			death();
+			newPiece();	
 			break;
 			
 		case 2:
 			for (Point p : Tetraminos[currentPiece][rotation]) {
 				wall[pieceOrigin.x + p.x][pieceOrigin.y + p.y] = CtetraminoColors[currentPiece];
 			}
-			clearRows();
-			newPiece();
+			clearRows();	
 			death();
+			newPiece();
 			break;
 		}
 	}
