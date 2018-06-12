@@ -8,6 +8,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import d0602.InsertData;
+
 public class Name extends JFrame implements ActionListener{
 
 	JButton con = new JButton("Confirm");
@@ -19,8 +21,8 @@ public class Name extends JFrame implements ActionListener{
 	JLabel jln = new JLabel("Player:"); 
 	JLabel jls = new JLabel("Score:");
 	
-	private long fs;
-
+	public static long fs;
+	public static String user_name;
 	public Name(long fscore) {
 		this.fs = fscore;
 	}
@@ -64,7 +66,13 @@ public class Name extends JFrame implements ActionListener{
 			String area; 
 			area = ti.getText(); 
 			String stArea = String.valueOf(area); 
+			user_name = stArea;
+			System.out.println(user_name);
+			
 			tan.setText("" + stArea ); 
+			InsertData it=new InsertData();
+			it.fxxk();
+			
 		}
 	} 
 		
