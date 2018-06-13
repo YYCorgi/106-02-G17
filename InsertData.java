@@ -1,6 +1,7 @@
 package d0602;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -13,11 +14,13 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
 import tetris.Name;
 
 
 public class InsertData {
+
+
+	private JLabel jLabel1;
 
 	public void fxxk() {
 		
@@ -66,13 +69,16 @@ public class InsertData {
 		jframe.setSize(300, 500);
 		jframe.setVisible(true);
 		JPanel p=new JPanel();
+		JPanel l=new JPanel();
 		JLabel jLabel = new JLabel();
-		jLabel.setText("name                             score");
+		JLabel llabel =new JLabel();
+		jLabel.setText("Name"+"                   "+"score" );
+		llabel.setText(Name.user_name+"                   "+Name.fs );
 		jframe.getContentPane().add(jLabel);
 		p.add(jLabel);
-		jframe.add(p,BorderLayout.CENTER);
-
-
+		l.add(llabel);
+		jframe.add(p,BorderLayout.NORTH);
+		jframe.add(l,BorderLayout.CENTER);
 	}
 
 	public void InsertData() {
