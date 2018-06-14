@@ -14,11 +14,14 @@ public class Gaming extends JPanel{
 	boolean gap;
 	boolean los = false;
 	int numClears = 0;
+	private ArrayList<Integer> currentshape = new ArrayList<Integer>();
 	
 	
-	private Color[] OtetraminoColors = {Color.cyan, Color.blue, Color.orange, Color.yellow, Color.green, Color.pink, Color.red};	
+	private Color[] OtetraminoColors = {Color.RED, Color.blue, Color.orange, Color.yellow, Color.MAGENTA, Color.CYAN, Color.GREEN};	
 	private Point pieceOrigin;
+	private Point nextPic;
 	private int currentPiece;
+	private int nextcurrentPiece;
 	private int rotation;
 	private ArrayList<Integer> nextPieces = new ArrayList<Integer>();
 	public long score = 0;
@@ -135,7 +138,9 @@ public class Gaming extends JPanel{
 						g.time--;
 						time = g.time;
 						System.out.println(""+time);
-						if(time == 0 || g.los == true) {
+						if(time == 0) {
+							g.los = true;
+							GG(1);
 							break;
 						}
 					}catch(InterruptedException e) {
@@ -153,7 +158,6 @@ public class Gaming extends JPanel{
 						Thread.sleep(1000);
 						g.dropDown();
 						if(g.los == true) {
-							GG(1);
 							break;
 						}
 					} catch ( InterruptedException e ) {}
@@ -195,6 +199,7 @@ public class Gaming extends JPanel{
 			}
 		}
 		newPiece();
+		nextPiece();
 	}
 	
 	private boolean collidesAt(int x, int y, int rotation) {
@@ -282,7 +287,7 @@ public class Gaming extends JPanel{
 	}
 	
 	public void clearRows() {	
-		for (int j = 21; j > 0; j--) {
+		for (int j = 22; j > 0; j--) {
 			gap = false;
 			for (int i = 6; i < 17; i++) {
 				if (wall[i][j] == Color.WHITE) {
@@ -324,6 +329,10 @@ public class Gaming extends JPanel{
 	}
 	
 	private void drawPiece(Graphics g) {
+		g.setColor(OtetraminoColors[nextcurrentPiece]);
+		for (Point p : Tetraminos[nextcurrentPiece][0]) {
+			g.fillRect((p.x + nextPic.x) * 40, (p.y + nextPic.y) * 40, 39, 39);
+		}	
 		g.setColor(OtetraminoColors[currentPiece]);
 		for (Point p : Tetraminos[currentPiece][rotation]) {
 			g.fillRect((p.x + pieceOrigin.x) * 40, (p.y + pieceOrigin.y) * 40, 39, 39);
@@ -353,12 +362,20 @@ public class Gaming extends JPanel{
 		drawPiece(g);
 	}
 
+	public void nextPiece() {
+		nextPic = new Point(2,3);
+		rotation = 0;
+		nextcurrentPiece = currentshape.get(currentPiece);
+		currentshape.remove(0);
+	}
+	
 	public void newPiece() {
-		pieceOrigin = new Point(11, 1);
+		pieceOrigin = new Point(10, 1);
 		rotation = 0;
 		if (nextPieces.isEmpty()) {
 			Collections.addAll(nextPieces, 0, 1, 2, 3, 4, 5, 6);
 			Collections.shuffle(nextPieces);
+			currentshape = nextPieces;
 		}
 		currentPiece = nextPieces.get(0);
 		nextPieces.remove(0);
