@@ -14,7 +14,8 @@ public class Gaming extends JPanel{
 	boolean gap;
 	boolean los = false;
 	int numClears = 0;
-	private ArrayList<Integer> currentshape = new ArrayList<Integer>();
+	private int currentPic;
+	private ArrayList<Integer> nextshape = new ArrayList<Integer>();
 	
 	
 	private Color[] OtetraminoColors = {Color.RED, Color.blue, Color.orange, Color.yellow, Color.MAGENTA, Color.CYAN, Color.GREEN};	
@@ -114,13 +115,15 @@ public class Gaming extends JPanel{
 					g.dropDown();
 					g.score += 1;
 					cs = g.score;
-					System.out.println(g.score);
 					break;
 				case KeyEvent.VK_LEFT:
 					g.move(-1);
 					break;
 				case KeyEvent.VK_RIGHT:
 					g.move(+1);
+					break;
+				case KeyEvent.VK_SHIFT:
+					g.hold();
 					break;
 				} 
 			}
@@ -137,7 +140,6 @@ public class Gaming extends JPanel{
 						Thread.sleep(1000);
 						g.time--;
 						time = g.time;
-						System.out.println(""+time);
 						if(time == 0) {
 							g.los = true;
 							GG(1);
@@ -244,7 +246,8 @@ public class Gaming extends JPanel{
 		}
 		clearRows();	
 		death();
-		newPiece();	
+		newPiece();
+		nextPiece();
 	}
 	
 	public void deleteRow(int row) {
@@ -329,13 +332,14 @@ public class Gaming extends JPanel{
 	}
 	
 	private void drawPiece(Graphics g) {
-		g.setColor(OtetraminoColors[nextcurrentPiece]);
-		for (Point p : Tetraminos[nextcurrentPiece][0]) {
-			g.fillRect((p.x + nextPic.x) * 40, (p.y + nextPic.y) * 40, 39, 39);
-		}	
 		g.setColor(OtetraminoColors[currentPiece]);
 		for (Point p : Tetraminos[currentPiece][rotation]) {
 			g.fillRect((p.x + pieceOrigin.x) * 40, (p.y + pieceOrigin.y) * 40, 39, 39);
+		}
+		
+		g.setColor(OtetraminoColors[nextcurrentPiece]);
+		for (Point p : Tetraminos[nextcurrentPiece][0]) {
+			g.fillRect((p.x + nextPic.x) * 40, (p.y + nextPic.y) * 40, 39, 39);
 		}	
 	}
 	
@@ -365,19 +369,26 @@ public class Gaming extends JPanel{
 	public void nextPiece() {
 		nextPic = new Point(2,3);
 		rotation = 0;
-		nextcurrentPiece = currentshape.get(currentPiece);
-		currentshape.remove(0);
+		if (nextshape.isEmpty()) {
+			Collections.addAll(nextshape, 0, 1, 2, 3, 4, 5, 6);
+			Collections.shuffle(nextshape);
+		}
+		nextcurrentPiece = nextshape.get(0);
+		nextshape.remove(0);
 	}
 	
 	public void newPiece() {
 		pieceOrigin = new Point(10, 1);
 		rotation = 0;
-		if (nextPieces.isEmpty()) {
-			Collections.addAll(nextPieces, 0, 1, 2, 3, 4, 5, 6);
-			Collections.shuffle(nextPieces);
-			currentshape = nextPieces;
+		if(nextPieces.isEmpty()) {
+			Collections.addAll(nextPieces, nextcurrentPiece);
 		}
 		currentPiece = nextPieces.get(0);
 		nextPieces.remove(0);
+	}
+	
+	public void hold() {
+		// TODO Auto-generated method stub
+		
 	}
 }
