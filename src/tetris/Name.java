@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import d0602.InsertData;
@@ -23,15 +24,11 @@ public class Name extends JFrame implements ActionListener{
 	
 	public static long fs;
 	public static String user_name;
-	
-	Gaming g = new Gaming();
-	
+
 	public Name(long fscore) {
 		this.fs = fscore;
 	}
-
-	public Name() {}
-
+	
 	public void enter() {
 		jln.setBounds(20,40,100,20); 
 		add(jln); 
@@ -68,7 +65,11 @@ public class Name extends JFrame implements ActionListener{
 			String area; 
 			area = ti.getText(); 
 			String stArea = String.valueOf(area); 
-			user_name = stArea;
+			if(stArea != null) {
+				user_name = stArea;
+			}else {
+				user_name = "Unnamed";
+			}
 			System.out.println(user_name);
 			
 			tan.setText("" + stArea ); 

@@ -27,7 +27,6 @@ public class MP3 {
     
     public void stop() {
     	loop = false;
-    	System.out.println("close "+loop);
     	audioThread.stop();
     }
 
@@ -41,12 +40,13 @@ public class MP3 {
                         player = new Player(bis);
                     }
                     catch (Exception e) {
-                        System.out.println("Problem playing file " + filename);
                         System.out.println(e);
                     }
 
             		try { player.play(); }
-                    catch (Exception e) { System.out.println(e); }            		
+                    catch (Exception e) { 
+                    	
+                    }            		
             	}while(loop);
             }
         });
@@ -64,12 +64,13 @@ public class MP3 {
                         player = new Player(bis);
                     }
                     catch (Exception e) {
-                        System.out.println("Problem playing file " + filename);
                         System.out.println(e);
                     }
 
             		try { player.play(); }
-                    catch (Exception e) { System.out.println(e); }            		
+                    catch (Exception e) { 
+                    	
+                    }            		
             	}while(loop);
             }
         });
@@ -87,12 +88,13 @@ public class MP3 {
                         player = new Player(bis);
                     }
                     catch (Exception e) {
-                        System.out.println("Problem playing file " + filename);
                         System.out.println(e);
                     }
 
             		try { player.play(); }
-                    catch (Exception e) { System.out.println(e); }            		
+                    catch (Exception e) { 
+                    	
+                    }            		
             	}while(loop);
             }
         });

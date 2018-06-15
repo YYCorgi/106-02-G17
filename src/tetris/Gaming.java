@@ -18,7 +18,6 @@ public class Gaming extends JPanel{
 	private ArrayList<Integer> nextshape = new ArrayList<Integer>();
 	MP3 m = new MP3();
 	
-	
 	private Color[] OtetraminoColors = {Color.RED, Color.blue, Color.orange, Color.yellow, Color.MAGENTA, Color.CYAN, Color.GREEN};	
 	private Point pieceOrigin;
 	private Point nextPic;
@@ -26,7 +25,7 @@ public class Gaming extends JPanel{
 	private int nextcurrentPiece;
 	private int rotation;
 	private ArrayList<Integer> nextPieces = new ArrayList<Integer>();
-	public long score = 0;
+	protected long score = 0;
 	private long cs;
 	public long fscore;
 	private Color[][] wall;
@@ -90,17 +89,15 @@ public class Gaming extends JPanel{
 	};
 	
 	public void start() {
-		m.setLoop(false);
-		m.BGMplay();
 		System.out.println("Game Time");
 		JFrame f = new JFrame();
 		f.setTitle("Game Time");
 		f.setSize((40*18)+5,(40*25)-15);
 		f.setVisible(true);
 		f.setResizable(false);
-
-		Gaming g = new Gaming();
 		
+		Gaming g = new Gaming();
+
 		g.init();
 		f.add(g);
 
@@ -115,8 +112,9 @@ public class Gaming extends JPanel{
 					break;
 				case KeyEvent.VK_DOWN:
 					g.dropDown();
-					g.cs++;
-					g.score = g.cs;
+					g.score++;
+					cs = g.score;
+					System.out.println("" + cs);
 					break;
 				case KeyEvent.VK_LEFT:
 					g.move(-1);
@@ -261,10 +259,10 @@ public class Gaming extends JPanel{
 	}
 	
 	public void GG(int n) {
-		Name name = new Name();
 		m.stop();
 		m.setLoop(false);
 		m.GGplay();
+		Name name = new Name(fscore);
 		switch(n) {
 		case 1:
 			fscore = cs;
@@ -275,7 +273,6 @@ public class Gaming extends JPanel{
 			break;
 			
 		case 2:
-			fscore = cs;
 			System.out.println("Reach the roof top");
 			System.out.println("" + fscore);
 			name = new Name(fscore);

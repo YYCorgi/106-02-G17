@@ -8,11 +8,15 @@ public class StartFrame extends JFrame implements ActionListener{
 
 	private Selection selection = new Selection();
 	private GridBagConstraints gbc= new GridBagConstraints();
+
+	MP3 m = new MP3();
 	
 	private JPanel Action;
 	private JButton start;
 	private JButton leaderboard;
-	private JButton setting;
+	private JButton mic;
+	
+	private int micCount = 0;
 
 	final int START = 1;
 	final int LEADERBOARD = 2;
@@ -34,12 +38,21 @@ public class StartFrame extends JFrame implements ActionListener{
 		
 		leaderboard = new JButton("Leaderboard");
 		gbc.gridx = 0;
-		gbc.gridy = 4;
+		gbc.gridy = 2;
 		gbc.gridheight = 2;
 		gbc.gridwidth = 2;
 		gbc.fill = GridBagConstraints.BOTH;
 		leaderboard.addActionListener(this);
 		Action.add(leaderboard,gbc);
+		
+		mic = new JButton("Music");
+		gbc.gridx = 0;
+		gbc.gridy = 4;
+		gbc.gridheight = 2;
+		gbc.gridwidth = 2;
+		gbc.fill = GridBagConstraints.BOTH;
+		mic.addActionListener(this);
+		Action.add(mic,gbc);
 		
 		add(Action, BorderLayout.CENTER);
 
@@ -52,6 +65,16 @@ public class StartFrame extends JFrame implements ActionListener{
 		}
 		if(e.getSource() == leaderboard) {
 			selection.setSelection(LEADERBOARD);
+		}
+		if(e.getSource()==mic){
+			micCount++;
+			if(micCount % 2 != 0) {
+				m.setLoop(false);
+				m.BGMplay();
+			}else {
+				m.stop();
+			}
+			micCount = 0;
 		}
 	}
 
