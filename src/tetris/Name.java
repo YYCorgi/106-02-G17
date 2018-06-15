@@ -23,6 +23,9 @@ public class Name extends JFrame implements ActionListener{
 	
 	public static long fs;
 	public static String user_name;
+	
+	Gaming g = new Gaming();
+	
 	public Name(long fscore) {
 		this.fs = fscore;
 	}
@@ -57,7 +60,6 @@ public class Name extends JFrame implements ActionListener{
 		setLayout(null); 
 		setBounds(100, 100, 220, 180); 
 		setVisible(true); 
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
 	}
 
 	@Override
