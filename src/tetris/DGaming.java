@@ -7,16 +7,18 @@ import java.util.*;
 import javax.swing.*;
 
 
-public class Gaming extends JPanel{
+public class DGaming extends JPanel{
 
-	public long time = 120;
+	public long time = 0;
 	boolean gap;
 	boolean los = false;
 	int numClears = 0;
 	private ArrayList<Integer> nextshape = new ArrayList<Integer>();
 	MP3 m = new MP3();
 	
-	private int picCount = 0;
+	public int picCount = 0;
+	public int level = 0;
+	public int sleep = 1000;
 	
 	private Color[] OtetraminoColors = {Color.RED, Color.blue, Color.orange, Color.yellow, Color.MAGENTA, Color.CYAN, Color.GREEN};	
 	private Point pieceOrigin;
@@ -89,14 +91,13 @@ public class Gaming extends JPanel{
 	};
 	
 	public void start() {
-		System.out.println("Game Time");
 		JFrame f = new JFrame();
 		f.setTitle("Game Time");
 		f.setSize((40*18)+5,(40*25)-15);
 		f.setVisible(true);
 		f.setResizable(false);
 		
-		Gaming g = new Gaming();
+		DGaming g = new DGaming();
 
 		g.init();
 		f.add(g);
@@ -112,8 +113,6 @@ public class Gaming extends JPanel{
 					break;
 				case KeyEvent.VK_DOWN:
 					g.dropDown();
-					g.score++;
-					cs = g.score;
 					break;
 				case KeyEvent.VK_LEFT:
 					g.move(-1);
@@ -134,11 +133,9 @@ public class Gaming extends JPanel{
 					try {
 						g.los = false;
 						Thread.sleep(1000);
-						g.time--;
+						g.time++;
 						time = g.time;
-						if(time == 0) {
-							g.los = true;
-							GG(1);
+						if(g.los == true) {
 							break;
 						}
 					}catch(InterruptedException e) {
@@ -153,8 +150,13 @@ public class Gaming extends JPanel{
 				while (los == false) {
 					try {
 						g.death();
-						Thread.sleep(1000);
+						Thread.sleep(g.sleep);
 						g.dropDown();
+						if(g.sleep >= 100) {
+							g.sleep = g.sleep - 3;
+						}else {
+							g.sleep = g.sleep;
+						}
 						if(g.los == true) {
 							break;
 						}
@@ -244,33 +246,22 @@ public class Gaming extends JPanel{
 		}
 	}
 	
-	public void GG(int n) {
+	public void GG() {
 		m.setLoop(false);
 		m.GGplay();
 		Name name = new Name(fscore);
-		switch(n) {
-		case 1:
 			fscore = cs;
 			System.out.println("Out of time");
 			System.out.println("" + fscore);
 			name = new Name(fscore);
 			name.enter();
-			break;
-				
-		case 2:
-			System.out.println("Reach the roof top");
-			System.out.println("" + fscore);
-			name = new Name(fscore);
-			name.enter();
-			break;
-		}
 	}
 	
 	public void death() {
 		for (int i = 7; i < 17; i++) {
 			if (wall[i][1] != Color.WHITE) {
 				los = true;
-				GG(2);
+				GG();
 				break;
 			}
 		}	
@@ -348,11 +339,12 @@ public class Gaming extends JPanel{
 		g.drawString("NEXT", 123,70);
 		g.drawString("States",123,420);
 		g.drawString("Your Score:",80,490);
-		g.drawString("Time Left:",80,525);
+		g.drawString("Time Passed:",80,525);
 		g.drawString("Pieces Count:", 80, 560);
 		g.drawString("" + score, 180, 490);
 		g.drawString("" + time, 180, 525);
 		g.drawString("" + picCount, 180, 560);
+
 		
 		repaint();
 		drawPiece(g);
@@ -380,7 +372,7 @@ public class Gaming extends JPanel{
 		nextPieces.remove(0);	
 	}
 
-	public Gaming() {
+	public DGaming() {
 
 	}
 }

@@ -14,12 +14,16 @@ public class StartFrame extends JFrame implements ActionListener{
 	private JPanel Action;
 	private JButton start;
 	private JButton leaderboard;
+	private JButton classic;
 	private JButton mic;
+
+	Gaming g;
 	
 	private int micCount = 1;
 
 	final int START = 1;
-	final int LEADERBOARD = 2;
+	final int CLASSIC = 2;
+	final int LEADERBOARD = 3;
 	
 	public boolean music = false;
 	
@@ -28,7 +32,7 @@ public class StartFrame extends JFrame implements ActionListener{
 		System.out.println("Enter Game mode");
 		Action = new JPanel(new GridBagLayout());
 		
-		start = new JButton("Start");
+		start = new JButton("Time Mode");
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.gridheight = 2;
@@ -39,16 +43,25 @@ public class StartFrame extends JFrame implements ActionListener{
 		
 		leaderboard = new JButton("Leaderboard");
 		gbc.gridx = 0;
-		gbc.gridy = 2;
+		gbc.gridy = 4;
 		gbc.gridheight = 2;
 		gbc.gridwidth = 2;
 		gbc.fill = GridBagConstraints.BOTH;
 		leaderboard.addActionListener(this);
 		Action.add(leaderboard,gbc);
+
+		classic = new JButton("Classic Mode");
+		gbc.gridx = 0;
+		gbc.gridy = 2;
+		gbc.gridheight = 2;
+		gbc.gridwidth = 2;
+		gbc.fill = GridBagConstraints.BOTH;
+		classic.addActionListener(this);
+		Action.add(classic,gbc);
 		
 		mic = new JButton("Music");
 		gbc.gridx = 0;
-		gbc.gridy = 4;
+		gbc.gridy = 6;
 		gbc.gridheight = 2;
 		gbc.gridwidth = 2;
 		gbc.fill = GridBagConstraints.BOTH;
@@ -56,7 +69,7 @@ public class StartFrame extends JFrame implements ActionListener{
 		Action.add(mic,gbc);
 		
 		add(Action, BorderLayout.CENTER);
-
+		
 	}
 
 	@Override
@@ -66,6 +79,9 @@ public class StartFrame extends JFrame implements ActionListener{
 		}
 		if(e.getSource() == leaderboard) {
 			selection.setSelection(LEADERBOARD);
+		}
+		if(e.getSource() == classic) {
+			selection.setSelection(CLASSIC);
 		}
 		if(e.getSource()==mic){
 			if(micCount % 2 != 0) {
