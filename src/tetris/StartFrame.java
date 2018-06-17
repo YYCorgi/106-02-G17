@@ -16,16 +16,17 @@ public class StartFrame extends JFrame implements ActionListener{
 	private JButton leaderboard;
 	private JButton mic;
 	
-	private int micCount = 0;
+	private int micCount = 1;
 
 	final int START = 1;
 	final int LEADERBOARD = 2;
+	
+	public boolean music = false;
 	
 	public StartFrame(){
 		super();
 		System.out.println("Enter Game mode");
 		Action = new JPanel(new GridBagLayout());
-		
 		
 		start = new JButton("Start");
 		gbc.gridx = 0;
@@ -67,14 +68,16 @@ public class StartFrame extends JFrame implements ActionListener{
 			selection.setSelection(LEADERBOARD);
 		}
 		if(e.getSource()==mic){
-			micCount++;
 			if(micCount % 2 != 0) {
-				m.setLoop(false);
+				music = true;
+				m.setLoop(true);
 				m.BGMplay();
+				micCount++;
 			}else {
 				m.stop();
+				music = false;
+				micCount++;
 			}
-			micCount = 0;
 		}
 	}
 

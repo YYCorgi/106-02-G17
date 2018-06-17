@@ -9,12 +9,10 @@ import javax.swing.*;
 
 public class Gaming extends JPanel{
 
-	
-	public long time = 20;
+	public long time = 120;
 	boolean gap;
 	boolean los = false;
 	int numClears = 0;
-	private int currentPic;
 	private ArrayList<Integer> nextshape = new ArrayList<Integer>();
 	MP3 m = new MP3();
 	
@@ -122,9 +120,6 @@ public class Gaming extends JPanel{
 				case KeyEvent.VK_RIGHT:
 					g.move(+1);
 					break;
-				case KeyEvent.VK_SHIFT:
-					g.hold();
-					break;
 				} 
 			}
 			
@@ -190,16 +185,6 @@ public class Gaming extends JPanel{
 				}
 			}
 		}
-		
-		for(int o = 0;o < 7;o++) {
-			for(int p = 8;p < 15;p++) {
-				if(o == 0 || o == 6 || p == 8 || p == 14) {
-					wall[o][p] = Color.BLACK;
-				}else {
-					wall[o][p] = Color.WHITE;
-				}
-			}
-		}
 		newPiece();
 		nextPiece();
 	}
@@ -259,7 +244,6 @@ public class Gaming extends JPanel{
 	}
 	
 	public void GG(int n) {
-		m.stop();
 		m.setLoop(false);
 		m.GGplay();
 		Name name = new Name(fscore);
@@ -271,7 +255,7 @@ public class Gaming extends JPanel{
 			name = new Name(fscore);
 			name.enter();
 			break;
-			
+				
 		case 2:
 			System.out.println("Reach the roof top");
 			System.out.println("" + fscore);
@@ -346,7 +330,7 @@ public class Gaming extends JPanel{
 		g.setColor(OtetraminoColors[nextcurrentPiece]);
 		for (Point p : Tetraminos[nextcurrentPiece][0]) {
 			g.fillRect((p.x + nextPic.x) * 40, (p.y + nextPic.y) * 40, 39, 39);
-		}	
+		}
 	}
 	
 	public void paintComponent(Graphics g){	
@@ -360,15 +344,13 @@ public class Gaming extends JPanel{
 		
 		g.setColor(Color.WHITE);
 		g.drawString("NEXT", 123,70);
-		g.drawString("HOLD", 123,350 );
-		g.drawString("States",123,630);
-		g.drawString("Your Score:",80,700);
-		g.drawString("Time Left:",80,770);
-		g.drawString("" + score, 180, 700);
-		g.drawString("" + time, 180, 770);
+		g.drawString("States",123,420);
+		g.drawString("Your Score:",80,490);
+		g.drawString("Time Left:",80,560);
+		g.drawString("" + score, 180, 490);
+		g.drawString("" + time, 180, 560);
 		
 		repaint();
-		
 		drawPiece(g);
 	}
 
@@ -392,9 +374,8 @@ public class Gaming extends JPanel{
 		currentPiece = nextPieces.get(0);
 		nextPieces.remove(0);
 	}
-	
-	public void hold() {
-		// TODO Auto-generated method stub
-		
+
+	public Gaming() {
+
 	}
 }
